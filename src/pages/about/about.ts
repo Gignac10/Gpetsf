@@ -15,11 +15,15 @@ export class AboutPage {
   lat: number;
   lng: number;*/
   map:any;
-  latitude:number = 24.026437;
-  longitude:number = -104.666607;
+  latitude:number = 24.0453;
+  longitude:number = -104.6168;
   coordenadas:any;
   latlng:any;
-  private pets;
+  pets = {
+    lat: '24.0203209',
+    lon: '-104.6575623' 
+  }; 
+  
 
   @ViewChild('map') mapElement: ElementRef;
   constructor(public navCtrl: NavController,
@@ -34,31 +38,62 @@ export class AboutPage {
               }
     getData(){
 
+
+
       this.database.list('coords/').valueChanges().subscribe(
         data => {
-          console.log(data);
-          this.pets = data;
+          var output = {
+            lat: data[0],
+            lon: data[1]
+          }
+
+          console.log("adentro");
+          this.pets.lat = JSON.stringify(output.lat);
+          this.pets.lon = JSON.stringify(output.lon);
+          console.log(output);
         });
 
+        
     }
 
+    showData(){
+      console.log(this.pets);
+      console.log(parseFloat(this.pets.lat))
+      console.log( this.latitude)
+      console.log(parseFloat(this.pets.lon))
+      console.log(this.longitude)
+      this.map=this.loadMap();
+    }
+     
     ionViewDidLoad(){
       this.getData();
       this.map=this.loadMap();
+
     }
 
+     sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+          break;
+        }
+      }
+    }
+  
     loadMap(){
-      console.log('loadMap');
-      //const latLng = new google.maps.LatLng(, );
-      console.log("Afuera "+this.pets);
       
-      var myLatLng = {lat: this.latitude, lng: this.longitude};
+      console.log('loadMap');
+      //const latLng = new googl
+      console.log("pets array afuera");
+      console.log(this.pets);
+  
+      var myLatLng = {lat: parseFloat(this.pets.lat), lng: parseFloat(this.pets.lon)};
      
      
 
       var map = new google.maps.Map(this.mapElement.nativeElement,{
         zoom:14,
-        center:{ lat:this.latitude, lng: this.longitude},
+        center:{ lat: parseFloat(this.pets.lat), lng: parseFloat(this.pets.lon)},
         disableDefaultUI: false,
         mapTypeControl: false,
         scaleControl:true,
